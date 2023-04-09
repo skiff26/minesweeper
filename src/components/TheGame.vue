@@ -1,8 +1,8 @@
 <template>
 	<div class="page__game game">
 		<div ref="board" class="game__board">
-			<audio ref="grass" src="/audio/sound.mp3"></audio>
-			<audio ref="blast" src="/audio/blast.mp3"></audio>
+			<audio ref="grass" src="./audio/sound.mp3"></audio>
+			<audio ref="blast" src="./audio/blast.mp3"></audio>
 			<div ref="row" class="row" v-for="(row, rowIndex) in board" :key="rowIndex">
 				<div ref="square" class="square" v-for="(square, colIndex) in row" :key="colIndex"
 				:class="getClass(rowIndex, colIndex, square)" 
