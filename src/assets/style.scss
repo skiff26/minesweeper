@@ -33,18 +33,20 @@
 	}
 }
 .footer {
+	padding: 20px 5px;
 	background: #000000b9;
 
 	&__content {
-		height: 60px;
+		padding: 10px 5px;
 		display: flex;
 		flex-wrap: wrap;
 		align-items: center;
 		justify-content: center;
 		gap: 30px;
 		@media (max-width: 527px){
-			margin-top: 20px;
+			height: max-content;
 			row-gap: 10px;
+			padding: 0;
 			margin-bottom: 20px;
 			justify-content: center;
 		}
@@ -59,28 +61,35 @@
 
 	&__copy {
 		text-align: center;
-		margin-bottom: 20px;
+		margin-top: 10px;
 		color: white;
 	}
 }
 
 .page {
-	padding: 50px 20px;
 	&__title {
+		padding-top: 50px;
 		text-align: center;
 		color: white;
 		font-size: 34px;
 		letter-spacing: 2px;
+		@media (max-width: 610px){
+			font-size: 30px;
+			padding-top: 20px;
+		}
 	}
 }
 .game {
-
 	&__board {
 		display: block;
 		max-width: max-content;
 		margin: 0 auto;
 		margin-top: 30px; 
+		margin-bottom: 30px;
 		border: 1px solid rgb(236, 231, 231);
+	}
+	@media (max-width: 1070px) {
+		padding-bottom: 20px;
 	}
 }
  
