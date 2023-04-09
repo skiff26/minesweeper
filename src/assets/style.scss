@@ -1,0 +1,227 @@
+.header {
+	height: 60px;
+	background: #000000b9;
+
+	&__content {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 40px;
+		height: 60px;
+	}
+
+	&__link {
+		font-size: 18px;
+		color: white;
+		letter-spacing: 2px;
+		position: relative;
+		&:after {
+		content: "";
+		position: absolute;
+		bottom: -1px;
+		left: 0;
+		width: 0;
+		height: 2px;
+		transition: width 0.3s ease 0s;
+		transition: all 0.3s ease 0s;
+		background-color: #fff;
+		}
+		&:hover::after{
+		opacity: 1;
+		width: 100%;
+		}
+	}
+}
+.footer {
+	background: #000000b9;
+
+	&__content {
+		height: 60px;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: center;
+		gap: 30px;
+		@media (max-width: 527px){
+			margin-top: 20px;
+			row-gap: 10px;
+			margin-bottom: 20px;
+			justify-content: center;
+		}
+	}
+
+	&__link {
+		color: white;
+		&:hover{
+			text-decoration: underline;
+		}
+	}
+
+	&__copy {
+		text-align: center;
+		margin-bottom: 20px;
+		color: white;
+	}
+}
+
+.page {
+	padding: 50px 20px;
+	&__title {
+		text-align: center;
+		color: white;
+		font-size: 34px;
+		letter-spacing: 2px;
+	}
+}
+.game {
+
+	&__board {
+		display: block;
+		max-width: max-content;
+		margin: 0 auto;
+		margin-top: 30px; 
+		border: 1px solid rgb(236, 231, 231);
+	}
+}
+ 
+ .row {
+	display: flex;
+	flex-direction: row;
+ }
+ 
+ .square {
+	width: 64px;
+	height: 64px;
+	border: 1px solid rgb(228, 220, 220);
+	font-size: 30px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	@media (max-width: 610px){
+		width: 40px;
+		height: 40px;
+	}
+	@media (max-width: 400px){
+		width: 30px;
+		height: 30px;
+	}
+ }
+
+ .black {
+	background: url('/grasses/1.jpg');
+ }
+ .white {
+	background: url('/grasses/2.jpg'); 
+}
+.unmine {
+	background: url('/grasses/ground.jpg'); 
+	color: rgba(252, 250, 250, 0.849);
+}
+.flag{
+	background: url('/grasses/mines.jpg') center / cover; 
+	color: black;
+	font-weight: 600;
+	font-size: 0;
+}
+
+.popup {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -100%);
+		padding: 16px;
+		border: 1px solid black;
+		border-radius: 5px;
+		background: rgb(233,225,225, 0.5);
+		backdrop-filter: blur(8px);
+
+	&__container {
+		width: 400px;
+		@media (max-width: 450px){
+			max-width: 280px;
+		}
+	}
+
+	&__title {
+		height: 40px;
+		font-size: 24px;
+		color:rgb(14, 13, 13);
+		border-bottom: black solid 1px;
+	}
+
+	&__content {
+		padding: 20px 0;
+		color: rgb(17, 17, 17);
+	}
+
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	&__buttons {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 30px;
+	}
+
+	&__btn {
+		padding: 10px;
+		border-radius: 5px;
+		transition: all 0.3s ease 0s;
+		&:hover{
+			background-color: rgba(255, 0, 0, 0.884);
+			color: white;
+			transform: scale(1.05);
+		}
+	}
+}
+
+.sidebar {
+	position: absolute;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	background-color: #c3cbdc;
+	background-image: linear-gradient(147deg, #c3cbdc 0%, #edf1f4 74%);
+	gap: 20px;
+	height: max-content;
+	width: 200px;
+	padding: 20px;
+	border-radius: 5px;
+	@media (max-width: 1070px){
+		position: static;
+		padding: 10px;
+		gap: 10px;
+		width: max-content;
+		margin: 20px auto;
+	}
+	&__title{
+		font-size: 18px;
+		font-weight: 600;
+	}
+	&__button {
+		font-size: 14px;
+		padding: 5px 10px;
+		border-radius: 3px;
+		transition: all 0.2s ease 0s;
+		border: 1px dotted black;
+		&:hover{
+			background-color: red;
+			color: white;
+			border: 1px solid white;
+		}
+	}
+}
+.ya-share2 ul{
+	display: flex;
+	justify-content: center;
+	align-content: center;
+	gap: 20px;
+	@media (max-width: 1070px){
+		display: block;
+	}
+}
