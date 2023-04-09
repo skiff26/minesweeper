@@ -2,7 +2,6 @@
 <teleport to='body'>
 	<div class="popup">
 		<div class="popup__container">
-			<audio ref="mouse" src="/audio/mouse.mp3"></audio>
 			<h2 class="popup__title">Игра закончена</h2>
 			<div class="popup__content" v-show="lose">Вы наступили на мину :( <br> <br> Попробуйте еще раз</div>
 			<div class="popup__footer">

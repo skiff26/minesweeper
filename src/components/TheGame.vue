@@ -7,7 +7,8 @@
 				<div ref="square" class="square" v-for="(square, colIndex) in row" :key="colIndex"
 				:class="getClass(rowIndex, colIndex, square)" 
 				@click="clearMine(rowIndex, colIndex, square, $event)"
-				@click.right.prevent="setFlag(rowIndex, colIndex, $event)"> 
+				@click.right.prevent="setFlag(rowIndex, colIndex, $event)"
+			   @touchmove="setFlag(rowIndex, colIndex, $event)">
 					<svg height="35" width="35" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" v-if="square === bomb" v-show="show || isOpen || blockGame" v-html="square"></svg>
 					<p v-else>{{ square }}</p>
 				</div>
@@ -41,6 +42,7 @@ export default {
 			blockGame: false,
 			isOpen: false,
 			lose: true,
+			timer: null,
 		}
 	},
 	methods: {
