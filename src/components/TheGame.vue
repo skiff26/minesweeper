@@ -4,7 +4,7 @@
 			<audio ref="grass" src="./audio/sound.mp3"></audio>
 			<audio ref="blast" src="./audio/blast.mp3"></audio>
 			<div ref="row" class="row" v-for="(row, rowIndex) in board" :key="rowIndex">
-				<div ref="square" class="square" v-for="(square, colIndex) in row" :key="colIndex"
+				<div ref="square" v-for="(square, colIndex) in row" :key="colIndex"
 				:class="getClass(rowIndex, colIndex, square)" 
 				@click="clearMine(rowIndex, colIndex, square, $event)"
 				@click.right.prevent="setFlag(rowIndex, colIndex, $event)"
@@ -42,7 +42,6 @@ export default {
 			blockGame: false,
 			isOpen: false,
 			lose: true,
-			timer: null,
 		}
 	},
 	methods: {
@@ -65,6 +64,7 @@ export default {
 					const audio = this.$refs.blast
 					audio.play()
 				}
+			   this.blockGame = true
 				this.isOpen = true
 			} else if (this.board[row][col] !== ""){
 				alert("This place is already unmine")
@@ -115,16 +115,24 @@ export default {
 			this.$nextTick(() => {
 				const allSquares = [...this.$refs.square]
 				const sortSquares = allSquares.filter((el) => el.lastChild.localName === 'p').filter((el) => el.innerText != "")
+				const sortForWin = allSquares.filter((el) => el.lastChild.localName === 'p').filter((el) => el.innerText === "")
 
 				if (sortSquares.length > 0) {
 					for (let square of sortSquares){
 						if (!square.classList.contains('flag')){
-							square.classList += " unmine"
+							if (!square.classList.contains('unmine')) {
+								square.classList += " unmine"
+							}
 						} else {
 							square.children[0].innerText = ""
 							console.log(sortSquares)
 						}
 					}
+				} 
+				if (!sortForWin.length > 0){
+					this.lose = false
+					this.isOpen = true
+					this.blockGame = true
 				}
 			})
 		},
@@ -175,6 +183,7 @@ export default {
 			})
 			this.blockGame = false
 			this.isOpen = false
+			this.lose = true
 			this.createBombs(this.board)
 		},
 		createBombs(board){
