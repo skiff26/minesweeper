@@ -8,7 +8,8 @@
 				:class="getClass(rowIndex, colIndex, square)" 
 				@click="clearMine(rowIndex, colIndex, square, $event)"
 				@click.right.prevent="setFlag(rowIndex, colIndex, $event)"
-			   @touchmove="setFlag(rowIndex, colIndex, $event)">
+			   @touchstart.prevent="start($event)" 
+				@touchend.stop="end(rowIndex, colIndex, $event)">
 					<svg height="35" width="35" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" v-if="square === bomb" v-show="show || isOpen || blockGame" v-html="square"></svg>
 					<p v-else>{{ square }}</p>
 				</div>
@@ -41,6 +42,8 @@ export default {
 			flag: icons['flag'],
 			blockGame: false,
 			isOpen: false,
+			touchStart: 0,
+			touchEnd: 0,
 			lose: true,
 		}
 	},
@@ -69,11 +72,6 @@ export default {
 			} else if (this.board[row][col] !== ""){
 				alert("This place is already unmine")
 			} else {
-				if (this.sound){
-					const audio = this.$refs.grass
-					audio.play()
-				}
-
 				const offsets = [  
 					[-1, -1], [-1, 0], [-1, 1],
 					[0, -1], [0, 1],
@@ -82,6 +80,11 @@ export default {
 
 				if (!event.target.classList.contains('flag')){
 					this.generateMoves(row, col, event)
+					
+					if (this.sound){
+						const audio = this.$refs.grass
+						audio.play()
+					}
 
 					for (const [x, y] of offsets) {
 						const newRow = row + x;
@@ -156,6 +159,19 @@ export default {
 					}	
 				}
 			} 
+		},
+		start(event){
+			this.touchStart = event.timeStamp
+		},
+		end(row, col, event){
+			this.touchEnd = event.timeStamp
+
+			let resultTime = this.touchEnd - this.touchStart
+			if (resultTime.toFixed(2) > 300){
+				this.setFlag(row, col, event)
+			} else {
+				this.clearMine(row, col, this.board[row][col], event)
+			}
 		},
 		close(){
 			this.isOpen = !this.isOpen
