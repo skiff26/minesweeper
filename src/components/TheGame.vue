@@ -8,7 +8,8 @@
 				:class="getClass(rowIndex, colIndex, square)" 
 				@click="clearMine(rowIndex, colIndex, square, $event)"
 				@click.right.prevent="setFlag(rowIndex, colIndex, $event)"
-			   @touchstart.prevent="start($event)" 
+			   @touchstart.prevent="start($event)"
+				@touchmove="move($event)"
 				@touchend.stop="end(rowIndex, colIndex, $event)">
 					<svg height="35" width="35" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" v-if="square === bomb" v-show="show || isOpen || blockGame" v-html="square"></svg>
 					<p v-else>{{ square }}</p>
@@ -45,6 +46,7 @@ export default {
 			touchStart: 0,
 			touchEnd: 0,
 			lose: true,
+			moved: null,
 		}
 	},
 	methods: {
@@ -164,6 +166,11 @@ export default {
 			this.touchStart = event.timeStamp
 		},
 		end(row, col, event){
+			if (this.moved > 30){
+				this.moved = null
+				return false
+			}
+
 			this.touchEnd = event.timeStamp
 
 			let resultTime = this.touchEnd - this.touchStart
@@ -172,6 +179,9 @@ export default {
 			} else {
 				this.clearMine(row, col, this.board[row][col], event)
 			}
+		},
+		move(event){
+			this.moved++
 		},
 		close(){
 			this.isOpen = !this.isOpen
