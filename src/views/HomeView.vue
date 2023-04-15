@@ -1,6 +1,3 @@
-
-import TheHeader from '../components/TheHeader.vue';
-
 <template>
 <div class="wrapper" :class="{light : white}">
 <TheHeader/>
@@ -12,9 +9,13 @@ import TheHeader from '../components/TheHeader.vue';
 				<div class="ya-share2" data-curtain data-shape="round" data-limit="0" data-more-button-type="short" data-services="vkontakte,odnoklassniki,telegram,twitter,viber"></div>
 					<button class="sidebar__button" @click="soundFunc">{{ soundBtn }}</button>
 					<button class="sidebar__button" @click="showFunc">{{ showBtn }}</button>
-				<button class="sidebar__button" @click="themeFunc">{{ themeBtn }}</button>
+					<button class="sidebar__button" @click="themeFunc">{{ themeBtn }}</button>
+					<select class="sidebar__select" v-model="selectedLvl" @change="changeLvl">
+						<option value="" disabled>Выберите режим игры</option>
+						<option v-for="lvl in gameLevel" :key="lvl.value" :value="lvl.value">{{ lvl.label }}</option>
+					</select>
 			</div>
-			<TheGame :sound="sound" :show="show"/>
+			<TheGame :sound="sound" :show="show" :lvl="selectedLvl"/>
 		</div>
 	</main>
 <TheFooter/>
@@ -33,6 +34,21 @@ export default {
 			sound: true,
 			show: false,
 			white: false,
+			selectedLvl: "low",
+			gameLevel: [
+				{
+					label: 'Новичок',
+					value: 'low'
+				},
+				{
+					label: 'Средний',
+					value: 'average'
+				},
+				{
+					label: 'Сложный',
+					value: 'hard'
+				},
+			]
 		}
 	},
 	computed: {
@@ -44,6 +60,11 @@ export default {
 		},
 		themeBtn(){
 			return this.white ? "Включить темную тему" : "Включить белую тему"
+		}
+	},
+	watch: {
+		selectedLvl(lvl){
+			localStorage.setItem('lvl', lvl)
 		}
 	},
 	methods: {
@@ -58,7 +79,7 @@ export default {
 		themeFunc(){
 			this.white = !this.white
 			localStorage.setItem('theme', this.white)
-		}
+		},
 	},
 	mounted(){
 		if (localStorage.getItem('sound') !== null){
@@ -67,8 +88,11 @@ export default {
 		if (localStorage.getItem('show') !== null){
 			this.show = JSON.parse(localStorage.getItem('show'))
 		}
-		if(localStorage.getItem('theme') !== null){
+		if (localStorage.getItem('theme') !== null){
 			this.white = JSON.parse(localStorage.getItem('theme'))
+		}
+		if (localStorage.getItem('lvl') !== null){
+			this.selectedLvl = localStorage.getItem('lvl')
 		}
 	}
 }

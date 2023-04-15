@@ -134,7 +134,7 @@
 }
 
 .popup {
-		position: absolute;
+		position: fixed;
 		top: 50%;
 		left: 50%;
 		transform: translate(-50%, -100%);
@@ -204,7 +204,7 @@
 		position: static;
 		padding: 10px;
 		gap: 10px;
-		width: 180px;
+		width: 220px;
 		margin: 20px auto;
 	}
 	&__title{
@@ -225,5 +225,14 @@
 				border: 1px solid white;
 			}
 		}
+	}
+	&__select{
+		font-size: 14px;
+		padding: 5px 10px;
+		border-radius: 3px;
+		user-select: none;
+		border: 1px dotted black;
+		background: hsla(0, 0%, 100%, 0.4);
+		width: max-content;
 	}
 }

@@ -1,16 +1,18 @@
 <template>
 	<div class="page__game game">
+		<audio ref="grass" src="./audio/sound.mp3"></audio>
+		<audio ref="blast" src="./audio/blast.mp3"></audio>
+		<audio ref="gameover" src="./audio/gameover.mp3"></audio>
+		<audio ref="win" src="./audio/win.mp3"></audio>
 		<div ref="board" class="game__board">
-			<audio ref="grass" src="./audio/sound.mp3"></audio>
-			<audio ref="blast" src="./audio/blast.mp3"></audio>
 			<div ref="row" class="row" v-for="(row, rowIndex) in board" :key="rowIndex">
 				<div ref="square" v-for="(square, colIndex) in row" :key="colIndex"
 				:class="getClass(rowIndex, colIndex, square)" 
 				@click="clearMine(rowIndex, colIndex, square, $event)"
 				@click.right.prevent="setFlag(rowIndex, colIndex, $event)"
-			   @touchstart.prevent="start($event)"
-				@touchmove="move($event)"
-				@touchend.stop="end(rowIndex, colIndex, $event)">
+				@touchstart="start($event)"
+				@touchend.prevent="end(rowIndex, colIndex, $event)"
+				@touchmove="move">
 					<svg height="35" width="35" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" v-if="square === bomb" v-show="show || isOpen || blockGame" v-html="square"></svg>
 					<p v-else>{{ square }}</p>
 				</div>
@@ -21,12 +23,14 @@
 </template>
 <script>
 import icons from '../icons'
+import sound from '../utils/sound'
+import getRandomInt from '../utils/randomInt'
 import EndGamePopup from '../components/EndGamePopup.vue'
 export default {
 	components: {
 		EndGamePopup
 	},
-	props: ['sound', 'show'],
+	props: ['sound', 'show', 'lvl'],
 	data () {
 		return {
 			board: [
@@ -47,6 +51,9 @@ export default {
 			touchEnd: 0,
 			lose: true,
 			moved: null,
+			level: this.lvl,
+			rows: null,
+			cols: null
 		}
 	},
 	methods: {
@@ -65,10 +72,8 @@ export default {
 				return
 			}
 			if (square === this.bomb){
-				if (this.sound) {
-					const audio = this.$refs.blast
-					audio.play()
-				}
+				sound(this.sound, this.$refs, 'blast')
+				sound(this.sound, this.$refs, 'gameover')
 			   this.blockGame = true
 				this.isOpen = true
 			} else if (this.board[row][col] !== ""){
@@ -82,11 +87,8 @@ export default {
 
 				if (!event.target.classList.contains('flag')){
 					this.generateMoves(row, col, event)
-					
-					if (this.sound){
-						const audio = this.$refs.grass
-						audio.play()
-					}
+
+					sound(this.sound, this.$refs)
 
 					for (const [x, y] of offsets) {
 						const newRow = row + x;
@@ -135,6 +137,7 @@ export default {
 					}
 				} 
 				if (!sortForWin.length > 0){
+					sound(this.sound, this.$refs, 'win')
 					this.lose = false
 					this.isOpen = true
 					this.blockGame = true
@@ -180,7 +183,7 @@ export default {
 				this.clearMine(row, col, this.board[row][col], event)
 			}
 		},
-		move(event){
+		move(){
 			this.moved++
 		},
 		close(){
@@ -188,16 +191,7 @@ export default {
 			this.blockGame = true
 		},
 		again(){
-			this.board = [
-				['', '', '', '', '', '', '', ''],
-				['', '', '', '', '', '', '', ''],
-				['', '', '', '', '', '', '', ''],
-				['', '', '', '', '', '', '', ''],
-				['', '', '', '', '', '', '', ''],
-				['', '', '', '', '', '', '', ''],
-				['', '', '', '', '', '', '', ''],
-				['', '', '', '', '', '', '', ''],
-			]
+			this.setLvl()
 			const board = this.$refs.board;
 			const unmineElements = board.querySelectorAll('.unmine');
 			const minesElements = board.querySelectorAll('.flag');
@@ -210,21 +204,40 @@ export default {
 			this.blockGame = false
 			this.isOpen = false
 			this.lose = true
+		},
+		setLvl(){
+			if (this.level === "hard"){
+				this.rows = 16
+				this.cols = 10
+			} else if (this.level === "average"){
+				this.rows = 11
+				this.cols = 9
+			} else {
+				this.rows = 8
+				this.cols = 8
+			}
+			this.board = Array.from({ length: this.rows }, () => Array.from({ length: this.cols }, () => ''));
 			this.createBombs(this.board)
 		},
 		createBombs(board){
 			for (let i = 0; i < board.length; i++){
-				for (let j = this.getRandomInt(5); j < board[i].length; j += this.getRandomInt(5)){	
+				for (let j = getRandomInt(5); j < board[i].length; j += getRandomInt(5)){	
 					board[i][j] = this.bomb
 				}	
 			}
 		},
-		getRandomInt(max) {
-			return Math.floor(Math.random() * max);
+	},
+	watch: {
+		lvl(newValue){
+			this.level = newValue
+			this.setLvl()
 		}
 	},
-	mounted(){
-		this.createBombs(this.board)
-	}
+	mounted() {
+		if (localStorage.getItem("lvl") !== null) {
+			this.lavel = localStorage.getItem("lvl")
+		}
+		this.setLvl()
+	},
 }
 </script>
