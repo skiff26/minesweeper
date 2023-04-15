@@ -4,6 +4,7 @@
 		<audio ref="blast" src="./audio/blast.mp3"></audio>
 		<audio ref="gameover" src="./audio/gameover.mp3"></audio>
 		<audio ref="win" src="./audio/win.mp3"></audio>
+		<audio ref="click" src="./audio/click.mp3"></audio>
 		<div ref="board" class="game__board">
 			<div ref="row" class="row" v-for="(row, rowIndex) in board" :key="rowIndex">
 				<div ref="square" v-for="(square, colIndex) in row" :key="colIndex"
@@ -18,18 +19,16 @@
 				</div>
 			</div>
 		</div>
-		<EndGamePopup v-if="isOpen" @close="close" @again="again($event)" :lose="lose" />
+		<DialogForGameEnd v-if="isOpen" @close="close" @again="again($event)" :lose="lose" :sound="sound"/>
 	</div>
 </template>
 <script>
 import icons from '../icons'
 import sound from '../utils/sound'
-import getRandomInt from '../utils/randomInt'
-import EndGamePopup from '../components/EndGamePopup.vue'
+import createBombs from '../utils/createBombs'
+import DialogForGameEnd from './DialogForGameEnd.vue'
 export default {
-	components: {
-		EndGamePopup
-	},
+	components: { DialogForGameEnd },
 	props: ['sound', 'show', 'lvl'],
 	data () {
 		return {
@@ -52,8 +51,6 @@ export default {
 			lose: true,
 			moved: null,
 			level: this.lvl,
-			rows: null,
-			cols: null
 		}
 	},
 	methods: {
@@ -189,9 +186,11 @@ export default {
 		close(){
 			this.isOpen = !this.isOpen
 			this.blockGame = true
+			sound(this.sound, this.$refs, 'click')
 		},
 		again(){
 			this.setLvl()
+			sound(this.sound, this.$refs, 'click')
 			const board = this.$refs.board;
 			const unmineElements = board.querySelectorAll('.unmine');
 			const minesElements = board.querySelectorAll('.flag');
@@ -208,7 +207,7 @@ export default {
 		setLvl(){
 			if (this.level === "hard"){
 				this.rows = 16
-				this.cols = 10
+				this.cols = 9
 			} else if (this.level === "average"){
 				this.rows = 11
 				this.cols = 9
@@ -217,19 +216,13 @@ export default {
 				this.cols = 8
 			}
 			this.board = Array.from({ length: this.rows }, () => Array.from({ length: this.cols }, () => ''));
-			this.createBombs(this.board)
-		},
-		createBombs(board){
-			for (let i = 0; i < board.length; i++){
-				for (let j = getRandomInt(5); j < board[i].length; j += getRandomInt(5)){	
-					board[i][j] = this.bomb
-				}	
-			}
-		},
+			createBombs(this.board, this.bomb)
+		}
 	},
 	watch: {
 		lvl(newValue){
 			this.level = newValue
+			this.again()
 			this.setLvl()
 		}
 	},

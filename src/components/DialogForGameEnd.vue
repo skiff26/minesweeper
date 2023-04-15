@@ -7,8 +7,8 @@
 			<div class="popup__content" v-else>Вы разминировали всё поле! <br> <br> Поздравляем!</div>
 			<div class="popup__footer">
 				<div class="popup__buttons">
-					<button class="popup__btn" @click="$emit('again')">Играть заново</button>
-					<button class="popup__btn" @click="$emit('close')">Закрыть</button>
+					<button class="popup__btn" @click="again">Играть заново</button>
+					<button class="popup__btn" @click="close">Закрыть</button>
 				</div>
 			</div>
 		</div>
@@ -18,6 +18,14 @@
 <script>
 export default {
 	emits: ['close', 'again'],
-	props: ['lose'],
+	props: ['lose', 'sound'],
+	methods: {
+		again(){
+			this.$emit('again')
+		},
+		close(){
+			this.$emit('close')		
+		}
+	},
 }
 </script>

@@ -66,6 +66,30 @@
 	}
 }
 
+@media (min-width: 1024px){
+	::-webkit-scrollbar {
+		width: 8px;
+	}
+	
+	::-webkit-scrollbar-track {
+		background-color: #242121;
+		border-radius: 10px;
+	}
+	
+	::-webkit-scrollbar-thumb {
+		background-color: #606060;
+		border-radius: 10px;
+	}
+	
+	::-webkit-scrollbar-thumb:hover {
+		background-color: #404040;
+	}
+	
+	::-webkit-scrollbar-corner {
+		background-color: #F4F4F4;
+	}
+}
+
 .page {
 	&__title {
 		padding-top: 50px;
@@ -85,11 +109,12 @@
 		max-width: max-content;
 		margin: 0 auto;
 		margin-top: 30px; 
-		margin-bottom: 30px;
+		margin-bottom: 60px;
 		border: 1px solid rgb(236, 231, 231);
 	}
 	@media (max-width: 1070px) {
 		padding-bottom: 20px;
+		margin-bottom: 0px;
 	}
 }
  
