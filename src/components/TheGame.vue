@@ -166,7 +166,7 @@ export default {
 			this.touchStart = event.timeStamp
 		},
 		end(row, col, event){
-			if (this.moved > 30){
+			if (this.moved > 10){
 				this.moved = null
 				return false
 			}
