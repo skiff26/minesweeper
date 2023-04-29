@@ -1,25 +1,36 @@
 <template>
-<div class="wrapper" :class="{light : white}">
-<TheHeader/>
-	<main class="page">
-		<div class="page__container">
-			<h1 class="page__title" :style="{color: white ? 'black' : 'white'}">Сапер</h1>
-			<div class="sidebar">
-				<h3 class="sidebar__title">Настройки</h3>
-				<div class="ya-share2" data-curtain data-shape="round" data-limit="0" data-more-button-type="short" data-services="vkontakte,odnoklassniki,telegram,twitter,viber"></div>
-					<button class="sidebar__button" @click="soundFunc">{{ soundBtn }}</button>
-					<button class="sidebar__button" @click="showFunc">{{ showBtn }}</button>
-					<button class="sidebar__button" @click="themeFunc">{{ themeBtn }}</button>
-					<select class="sidebar__select" v-model="selectedLvl" @change="changeLvl">
-						<option value="" disabled>Выберите режим игры</option>
-						<option v-for="lvl in gameLevel" :key="lvl.value" :value="lvl.value">{{ lvl.label }}</option>
-					</select>
+	<div class="wrapper" :class="{light : white}">
+	<TheHeader/>
+		<Transition>
+		<main class="page" v-if="isLoading">
+			<div class="page__container">
+				<div class="page__loader">
+					<div class="page__scanner">
+						<span>Loading...</span>
+					</div>
+				</div>
 			</div>
-			<TheGame :sound="sound" :show="show" :lvl="selectedLvl"/>
-		</div>
-	</main>
-<TheFooter/>
-</div>
+		</main>
+		<main class="page" v-else>
+			<div class="page__container">
+				<h1 class="page__title" :style="{color: white ? 'black' : 'white'}">Сапер</h1>
+				<div class="sidebar">
+					<h3 class="sidebar__title">Настройки</h3>
+					<div class="ya-share2" data-curtain data-shape="round" data-limit="0" data-more-button-type="short" data-services="vkontakte,odnoklassniki,telegram,twitter,viber"></div>
+						<button class="sidebar__button" @click="soundFunc">{{ soundBtn }}</button>
+						<button class="sidebar__button" @click="showFunc">{{ showBtn }}</button>
+						<button class="sidebar__button" @click="themeFunc">{{ themeBtn }}</button>
+						<select class="sidebar__select" v-model="selectedLvl" @change="changeLvl">
+							<option value="" disabled>Выберите режим игры</option>
+							<option v-for="lvl in gameLevel" :key="lvl.value" :value="lvl.value">{{ lvl.label }}</option>
+						</select>
+				</div>
+				<TheGame :sound="sound" :show="show" :lvl="selectedLvl"/>
+			</div>
+		</main>
+	</Transition>
+	<TheFooter/>
+	</div>
 </template>
 <script>
 import TheHeader from '../components/TheHeader.vue'
@@ -35,6 +46,7 @@ export default {
 			show: false,
 			white: false,
 			selectedLvl: "low",
+			isLoading: this.$store.getters.checkLoading,
 			gameLevel: [
 				{
 					label: 'Новичок',
@@ -82,6 +94,11 @@ export default {
 		},
 	},
 	mounted(){
+		setTimeout(() => {
+			this.$store.commit('loading', false)
+			this.isLoading = this.$store.getters.checkLoading
+		}, 2250);
+
 		if (localStorage.getItem('sound') !== null){
 			this.sound = JSON.parse(localStorage.getItem('sound'))
 		}
