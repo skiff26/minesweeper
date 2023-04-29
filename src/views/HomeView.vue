@@ -1,7 +1,7 @@
 <template>
 	<div class="wrapper" :class="{light : white}">
 	<TheHeader/>
-		<Transition>
+		<Transition mode="out-in">
 		<main class="page" v-if="isLoading">
 			<div class="page__container">
 				<div class="page__loader">
